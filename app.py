@@ -67,6 +67,12 @@ def generate_affordability_map(df, title):
 
     return fig
 
+#Creates a html table which will be used to show the top 5 most affordable/expensive places to live
+def df_to_html_table(df):
+    header = [html.Th(col) for col in df.columns]
+    rows = [html.Tr([html.Td(cell) for cell in row]) for row in df.values]
+    return [html.Thead(html.Tr(header)), html.Tbody(rows)]
+
 #The app layout design is below, using dash bootstrap
 app.layout = dbc.Container([
     #adds a title to the page
@@ -91,7 +97,19 @@ app.layout = dbc.Container([
             dbc.Button("Reset Map", id="reset-button", color="secondary", className="mt-1")
         ], width=2)
     ], className="mb-4 justify-content-center"),
-])
+
+    dbc.Row([
+        dbc.Col([
+            html.H4("Top 5 Most Affordable Areas", className="text-success"),
+            dbc.Table(id="affordable-table", bordered=True, hover=True, striped=True, responsive=True)
+        ], width=6),
+
+        dbc.Col([
+            html.H4("Top 5 Least Affordable Areas", className="text-danger"),
+            dbc.Table(id="expensive-table", bordered=True, hover=True, striped=True, responsive=True)
+        ], width=6)
+    ], className="mt-4")
+], fluid=True)
 
 
 
