@@ -67,6 +67,7 @@ def generate_affordability_map(df, title):
 
     return fig
 
+#The app layout design is below, using dash bootstrap
 app.layout = dbc.Container([
     #adds a title to the page
     dbc.Row([
@@ -78,6 +79,18 @@ app.layout = dbc.Container([
             dcc.Graph(id="choropleth-map")
         ])
     ]),
+    #adds the section where users will be able to enter their own salary to see updates on the map
+    dbc.Row([
+        dbc.Col([
+            html.Label("Enter your annual salary (£):", className="form-label"),
+            dcc.Input(id="salary-input", type="number", placeholder="Enter your annual salary", step=1000, className="form-control")
+        ], width=3),
+    #adds a reset button to show the choropleth map with the original 2024 data
+        dbc.Col([
+            html.Label("Reset to default:", className="form-label"),
+            dbc.Button("Reset Map", id="reset-button", color="secondary", className="mt-1")
+        ], width=2)
+    ], className="mb-4 justify-content-center"),
 ])
 
 
