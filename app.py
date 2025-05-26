@@ -9,6 +9,8 @@ import json
 #This includes median house price, median salary, and housing affordability index that I calculated
 MergedData = pd.read_csv("Merged data.csv")
 
+MergedData["Original Affordability Index"] = MergedData["Housing Affordability Index"].copy()
+
 #Loads the boundary data for England and Wales which was edited during processing to use EPSG:4326 for the lat/lon coordinates
 with open("fixed_boundaries.geojson") as f:
     geojson = json.load(f)
@@ -131,7 +133,7 @@ def update_dashboard(user_salary, reset_clicks):
         warning_message = ""
     #displays an error message prompting the user to enter a valid number if they input something invalid for the salary
     elif not user_salary or user_salary <= 0:
-        warning_message = "\u26a0 Please enter a valid salary greater than £0."
+        #warning_message = "\u26a0 Please enter a valid salary greater than £0."
         df["Housing Affordability Index"] = df["Original Affordability Index"]
     #creates new index based on the user's inputted salary
     else:
@@ -142,6 +144,25 @@ def update_dashboard(user_salary, reset_clicks):
     labels = ["Very Affordable", "Affordable", "Expensive", "Very Expensive"]
     df["Affordability Level"] = pd.cut(df["Housing Affordability Index"], bins=bins, labels=labels)
 
+    # pulls in the top 5 most/least affordable places
+    top_affordable = df.nsmallest(5, "Housing Affordability Index")[["Location", "Median House Price", "Median Salary", "Housing Affordability Index"]].copy()
+    top_expensive = df.nlargest(5, "Housing Affordability Index")[["Location", "Median House Price", "Median Salary", "Housing Affordability Index"]].copy()
 
+    for col in ["Median House Price", "Median Salary"]:
+        top_affordable[col] = pd.to_numeric(top_affordable[col], errors="coerce")
+        top_expensive[col] = pd.to_numeric(top_expensive[col], errors="coerce")
+
+        top_affordable[col] = top_affordable[col].map(lambda x: f"£{x:,.0f}" if pd.notnull(x) else "N/A")
+        top_expensive[col] = top_expensive[col].map(lambda x: f"£{x:,.0f}" if pd.notnull(x) else "N/A")
+
+    top_affordable["Housing Affordability Index"] = pd.to_numeric(top_affordable["Housing Affordability Index"], errors="coerce").map(lambda x: f"{x:.1f}" if pd.notnull(x) else "N/A")
+    top_expensive["Housing Affordability Index"] = pd.to_numeric(top_expensive["Housing Affordability Index"], errors="coerce").map(lambda x: f"{x:.1f}" if pd.notnull(x) else "N/A")
+
+    title = "England & Wales Housing Affordability Map"
+    if not triggered_by_reset and user_salary and user_salary > 0:
+        title = f"Affordability Based on £{int(user_salary):,} Salary"
+
+    # Return updated map, tables, and optional warning
+    return generate_affordability_map(df, title), df_to_html_table(top_affordable), df_to_html_table(top_expensive), #warning_message
 if __name__ == "__main__":
     app.run(debug=True)
