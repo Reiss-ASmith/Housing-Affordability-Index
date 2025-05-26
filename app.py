@@ -97,7 +97,7 @@ app.layout = dbc.Container([
             dbc.Button("Reset Map", id="reset-button", color="secondary", className="mt-1")
         ], width=2)
     ], className="mb-4 justify-content-center"),
-
+    #adds 2 tables to show the top 5 most/least affordable areas 
     dbc.Row([
         dbc.Col([
             html.H4("Top 5 Most Affordable Areas", className="text-success"),
@@ -111,6 +111,31 @@ app.layout = dbc.Container([
     ], className="mt-4")
 ], fluid=True)
 
+#Callbacks to show changes made due to user inputs
+@app.callback(
+    Output("choropleth-map", "figure"),
+    Output("affordable-table", "children"),
+    Output("expensive-table", "children"),
+    Input("salary-input", "value"),
+    Input("reset-button", "n_clicks")
+)
+#function that updates the dashboard depending on user input
+def update_dashboard(user_salary, reset_clicks):
+    warning_message = ""
+    df = MergedData.copy()
+
+    ctx = dash.callback_context
+    triggered_by_reset = ctx.triggered and ctx.triggered[0]["prop_id"] == "reset-button.n_clicks"
+    if triggered_by_reset:
+        df["Housing Affordability Index"] = df["Original Affordability Index"]
+        warning_message = ""
+    #displays an error message prompting the user to enter a valid number if they input something invalid for the salary
+    elif not user_salary or user_salary <= 0:
+        warning_message = "\u26a0 Please enter a valid salary greater than £0."
+        df["Housing Affordability Index"] = df["Original Affordability Index"]
+    #creates new index based on the user's inputted salary
+    else:
+        df["Housing Affordability Index"] = df["Median House Price"] / user_salary
 
 
 if __name__ == "__main__":
