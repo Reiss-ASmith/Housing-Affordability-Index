@@ -15,7 +15,7 @@ MergedData["Original Affordability Index"] = MergedData["Housing Affordability I
 with open("fixed_boundaries.geojson") as f:
     geojson = json.load(f)
 
-app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
+app = dash.Dash(__name__, external_stylesheets=[dbc.themes.CYBORG])
 app.title = "England & Wales Housing Affordability Dashboard"
 
 
@@ -91,7 +91,8 @@ app.layout = dbc.Container([
     dbc.Row([
         dbc.Col([
             html.Label("Enter your annual salary (£):", className="form-label"),
-            dcc.Input(id="salary-input", type="number", placeholder="Enter your annual salary", step=1000, className="form-control")
+            dcc.Input(id="salary-input", type="number", placeholder="Enter your annual salary", step=1000, className="form-control"),
+            dbc.Alert(id="salary-warning", color="danger", is_open=False, dismissable=True, className="mt-2")
         ], width=3),
     #adds a reset button to show the choropleth map with the original 2024 data
         dbc.Col([
@@ -118,12 +119,15 @@ app.layout = dbc.Container([
     Output("choropleth-map", "figure"),
     Output("affordable-table", "children"),
     Output("expensive-table", "children"),
+    Output("salary-warning", "children"),
+    Output("salary-warning", "is_open"),
     Input("salary-input", "value"),
     Input("reset-button", "n_clicks")
 )
 #function that updates the dashboard depending on user input
 def update_dashboard(user_salary, reset_clicks):
     warning_message = ""
+    show_warning = False
     df = MergedData.copy()
 
     ctx = dash.callback_context
@@ -131,13 +135,17 @@ def update_dashboard(user_salary, reset_clicks):
     if triggered_by_reset:
         df["Housing Affordability Index"] = df["Original Affordability Index"]
         warning_message = ""
+        show_warning = False
     #displays an error message prompting the user to enter a valid number if they input something invalid for the salary
     elif not user_salary or user_salary <= 0:
-        #warning_message = "\u26a0 Please enter a valid salary greater than £0."
+        warning_message = "\u26a0 Please enter a valid salary greater than £0."
         df["Housing Affordability Index"] = df["Original Affordability Index"]
+        show_warning = True
     #creates new index based on the user's inputted salary
     else:
         df["Housing Affordability Index"] = df["Median House Price"] / user_salary
+        warning_message = ""
+        show_warning = False
     
     #bins that are used for colour coding the choropleth map depending on the affordability index score
     bins = [0, 6, 9, 12, float("inf")]
@@ -163,6 +171,13 @@ def update_dashboard(user_salary, reset_clicks):
         title = f"Affordability Based on £{int(user_salary):,} Salary"
 
     # Return updated map, tables, and optional warning
-    return generate_affordability_map(df, title), df_to_html_table(top_affordable), df_to_html_table(top_expensive), #warning_message
+    return (
+        generate_affordability_map(df, title),
+        df_to_html_table(top_affordable),
+        df_to_html_table(top_expensive),
+        warning_message,
+        show_warning
+    )
+
 if __name__ == "__main__":
     app.run(debug=True)
