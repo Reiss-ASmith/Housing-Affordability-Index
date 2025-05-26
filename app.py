@@ -37,7 +37,7 @@ def generate_affordability_map(df, title):
         "Very Expensive": "red"
     }
 
-#The choropleth map code
+#The choropleth map code used during the data processing
     fig = px.choropleth(
         df,
         geojson=geojson,
@@ -66,6 +66,21 @@ def generate_affordability_map(df, title):
     fig.update_layout(margin={"r":0,"t":30,"l":0,"b":0})
 
     return fig
+
+app.layout = dbc.Container([
+    #adds a title to the page
+    dbc.Row([
+        dbc.Col(html.H1("England & Wales Affordability Dashboard", className="text-center text-primary mb-4"), width=12)
+    ]),
+    #adds the location for where the choropleth map will show once loaded
+    dbc.Row([
+        dbc.Col([
+            dcc.Graph(id="choropleth-map")
+        ])
+    ]),
+])
+
+
 
 if __name__ == "__main__":
     app.run(debug=True)
