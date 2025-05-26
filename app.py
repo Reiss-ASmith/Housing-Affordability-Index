@@ -136,6 +136,11 @@ def update_dashboard(user_salary, reset_clicks):
     #creates new index based on the user's inputted salary
     else:
         df["Housing Affordability Index"] = df["Median House Price"] / user_salary
+    
+    #bins that are used for colour coding the choropleth map depending on the affordability index score
+    bins = [0, 6, 9, 12, float("inf")]
+    labels = ["Very Affordable", "Affordable", "Expensive", "Very Expensive"]
+    df["Affordability Level"] = pd.cut(df["Housing Affordability Index"], bins=bins, labels=labels)
 
 
 if __name__ == "__main__":
