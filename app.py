@@ -82,7 +82,7 @@ def df_to_html_table(df):
 app.layout = dbc.Container([
     #adds a title to the page
     dbc.Row([
-        dbc.Col(html.H1("England & Wales Affordability Dashboard", className="dashboard-title"), width=12)
+        dbc.Col(html.H1("Housing Affordability Index for England & Wales", className="dashboard-title"), width=12)
     ]),
     #adds the location for where the choropleth map will show once loaded
     dbc.Row([
@@ -122,12 +122,12 @@ app.layout = dbc.Container([
     #adds 2 tables to show the top 5 most/least affordable areas 
     dbc.Row([
         dbc.Col([
-            html.H4("Top 5 Most Affordable Areas", className="table-header"),
+            html.H4("Top 5 Most Affordable Areas", className="affordable-table-header"),
             dbc.Table(id="affordable-table", bordered=True, hover=True, striped=True, responsive=True, className="custom-table")
         ], xs=12, md=6),
 
         dbc.Col([
-            html.H4("Top 5 Least Affordable Areas", className="table-header"),
+            html.H4("Top 5 Most Expensive Areas", className="expensive-table-header"),
             dbc.Table(id="expensive-table", bordered=True, hover=True, striped=True, responsive=True, className="custom-table")
         ], xs=12, md=6)
     ], className="custom-row")
