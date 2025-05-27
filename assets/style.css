@@ -38,6 +38,8 @@ body {
 
 .custom-button {
     margin-top: 0.3rem;
+    font-size: 0.85rem;
+    line-height: 1.2;
 }
 
 .custom-alert {

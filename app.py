@@ -94,17 +94,31 @@ app.layout = dbc.Container([
     dbc.Row([
         dbc.Col([
             html.Label("Enter your annual salary (£):", className="input-label"),
-            dcc.Input(id="salary-input", type="number", placeholder="Enter your annual salary", step=1000, className="custom-input"),
-            dbc.Alert(id="salary-warning", color="danger", is_open=False, dismissable=True, className="custom-alert")
-        ], xs=12, md=4),
-    #adds a reset button to show the choropleth map with the original 2024 data
-        dbc.Col([
-        html.Div([
-            html.Label(" ", className="input-label"),
-            dbc.Button("Reset Map", id="reset-button", color="secondary", className="custom-button")
-        ], className="d-flex align-items-end")
-        ], xs=12, md=2)
+            html.Div([
+                dcc.Input(
+                    id="salary-input",
+                    type="number",
+                    placeholder="Enter your annual salary",
+                    step=1000,
+                    className="custom-input me-2"
+                ),
+                dbc.Button(
+                    "Reset Map",
+                    id="reset-button",
+                    color="secondary",
+                    className="custom-button"
+                )
+            ], className="d-flex flex-column flex-md-row align-items-stretch align-items-md-end"),
+            dbc.Alert(
+                id="salary-warning",
+                color="danger",
+                is_open=False,
+                dismissable=True,
+                className="custom-alert mt-2"
+            )
+        ], xs=12, md=8)
     ], justify="center", className="custom-row"),
+
     #adds 2 tables to show the top 5 most/least affordable areas 
     dbc.Row([
         dbc.Col([
