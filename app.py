@@ -17,6 +17,7 @@ with open("fixed_boundaries.geojson") as f:
 
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.CYBORG])
 app.title = "England & Wales Housing Affordability Index Dashboard"
+server=app.server
 
 
 #Function that created the choropleth map
