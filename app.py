@@ -16,7 +16,7 @@ with open("fixed_boundaries.geojson") as f:
     geojson = json.load(f)
 
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.CYBORG])
-app.title = "England & Wales Housing Affordability Dashboard"
+app.title = "England & Wales Housing Affordability Index Dashboard"
 
 
 #Function that created the choropleth map
@@ -191,9 +191,9 @@ def update_dashboard(user_salary, reset_clicks):
     top_affordable["Housing Affordability Index"] = pd.to_numeric(top_affordable["Housing Affordability Index"], errors="coerce").map(lambda x: f"{x:.2f}" if pd.notnull(x) else "N/A")
     top_expensive["Housing Affordability Index"] = pd.to_numeric(top_expensive["Housing Affordability Index"], errors="coerce").map(lambda x: f"{x:.2f}" if pd.notnull(x) else "N/A")
 
-    title = "England & Wales Housing Affordability Map"
+    title = "England & Wales Housing Affordability Map based on 2024 data"
     if not triggered_by_reset and user_salary and user_salary > 0:
-        title = f"Affordability Based on £{int(user_salary):,} Salary"
+        title = f"Affordability based on an annual salary of £{int(user_salary):,} "
 
     # Return updated map, tables, and warning
     return (
