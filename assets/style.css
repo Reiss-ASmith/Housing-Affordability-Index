@@ -1,0 +1,73 @@
+/* Custom CSS file */
+body {
+    background-color: #121212;
+    color: #e0e0e0;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.dashboard-title {
+    font-size: 2.5rem;
+    font-weight: 600;
+    text-align: center;
+    color: #ffffff;
+    margin: 2rem 0 1.5rem 0;
+}
+
+.input-label {
+    font-weight: 500;
+    color: #cccccc;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.custom-input {
+    background-color: #1e1e1e;
+    color: #ffffff;
+    border: 1px solid #444444;
+    border-radius: 4px;
+    padding: 0.5rem;
+    width: 100%;
+}
+
+.custom-input::placeholder {
+    color: #888888;
+}
+
+.custom-alert {
+    font-size: 0.95rem;
+    margin-top: 1rem;
+}
+
+.custom-button {
+    margin-top: 2rem;
+}
+
+.custom-row {
+    margin-bottom: 2rem;
+}
+
+.custom-graph {
+    background-color: #1e1e1e;
+    padding: 10px;
+    border: 1px solid #333333;
+    border-radius: 8px;
+}
+
+.table-heading {
+    font-size: 1.25rem;
+    color: #ffffff;
+    margin-bottom: 1rem;
+}
+
+.custom-table {
+    background-color: #1e1e1e;
+    color: #e0e0e0;
+}
+
+.custom-table tbody tr:nth-of-type(odd) {
+    background-color: #2a2a2a;
+}
+
+.custom-table tbody tr:hover {
+    background-color: #333333;
+}

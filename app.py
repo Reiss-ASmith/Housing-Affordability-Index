@@ -53,7 +53,8 @@ def generate_affordability_map(df, title):
             "Median House Price", 
             "Median Salary"
         ],
-        title=title
+        title=title,
+        template="plotly_dark"
     )
 
 #Formats the information displayed so that the index rounds to 2 decimal places and the price values are in pricing format
@@ -65,7 +66,9 @@ def generate_affordability_map(df, title):
     )
 
     fig.update_geos(fitbounds="locations", visible=False)
-    fig.update_layout(margin={"r":0,"t":30,"l":0,"b":0})
+    fig.update_layout(margin={"r":0,"t":30,"l":0,"b":0},
+                      paper_bgcolor="#2a2a2a",
+                      plot_bgcolor="#2a2a2a")
 
     return fig
 
@@ -79,36 +82,36 @@ def df_to_html_table(df):
 app.layout = dbc.Container([
     #adds a title to the page
     dbc.Row([
-        dbc.Col(html.H1("England & Wales Affordability Dashboard", className="text-center text-primary mb-4"), width=12)
+        dbc.Col(html.H1("England & Wales Affordability Dashboard", className="dashboard-title"), width=12)
     ]),
     #adds the location for where the choropleth map will show once loaded
     dbc.Row([
         dbc.Col([
-            dcc.Graph(id="choropleth-map")
+            dcc.Graph(id="choropleth-map", className="custom-graph")
         ])
     ]),
     #adds the section where users will be able to enter their own salary to see updates on the map
     dbc.Row([
         dbc.Col([
-            html.Label("Enter your annual salary (£):", className="form-label"),
-            dcc.Input(id="salary-input", type="number", placeholder="Enter your annual salary", step=1000, className="form-control"),
-            dbc.Alert(id="salary-warning", color="danger", is_open=False, dismissable=True, className="mt-2")
+            html.Label("Enter your annual salary (£):", className="input-label"),
+            dcc.Input(id="salary-input", type="number", placeholder="Enter your annual salary", step=1000, className="custom-input"),
+            dbc.Alert(id="salary-warning", color="danger", is_open=False, dismissable=True, className="custom-alert")
         ], width=3),
     #adds a reset button to show the choropleth map with the original 2024 data
         dbc.Col([
-            html.Label("Reset to default:", className="form-label"),
-            dbc.Button("Reset Map", id="reset-button", color="secondary", className="mt-1")
+            html.Label("Reset to default:", className="input-label"),
+            dbc.Button("Reset Map", id="reset-button", color="secondary", className="custom-button")
         ], width=2)
     ], className="mb-4 justify-content-center"),
     #adds 2 tables to show the top 5 most/least affordable areas 
     dbc.Row([
         dbc.Col([
-            html.H4("Top 5 Most Affordable Areas", className="text-success"),
+            html.H4("Top 5 Most Affordable Areas", className="table-header"),
             dbc.Table(id="affordable-table", bordered=True, hover=True, striped=True, responsive=True)
         ], width=6),
 
         dbc.Col([
-            html.H4("Top 5 Least Affordable Areas", className="text-danger"),
+            html.H4("Top 5 Least Affordable Areas", className="table-header"),
             dbc.Table(id="expensive-table", bordered=True, hover=True, striped=True, responsive=True)
         ], width=6)
     ], className="mt-4")
