@@ -89,32 +89,34 @@ app.layout = dbc.Container([
         dbc.Col([
             dcc.Graph(id="choropleth-map", className="custom-graph")
         ])
-    ]),
+    ], className="custom-row"),
     #adds the section where users will be able to enter their own salary to see updates on the map
     dbc.Row([
         dbc.Col([
             html.Label("Enter your annual salary (£):", className="input-label"),
             dcc.Input(id="salary-input", type="number", placeholder="Enter your annual salary", step=1000, className="custom-input"),
             dbc.Alert(id="salary-warning", color="danger", is_open=False, dismissable=True, className="custom-alert")
-        ], width=3),
+        ], xs=12, md=4),
     #adds a reset button to show the choropleth map with the original 2024 data
         dbc.Col([
-            html.Label("Reset to default:", className="input-label"),
+        html.Div([
+            html.Label(" ", className="input-label"),
             dbc.Button("Reset Map", id="reset-button", color="secondary", className="custom-button")
-        ], width=2)
-    ], className="mb-4 justify-content-center"),
+        ], className="d-flex align-items-end")
+        ], xs=12, md=2)
+    ], justify="center", className="custom-row"),
     #adds 2 tables to show the top 5 most/least affordable areas 
     dbc.Row([
         dbc.Col([
             html.H4("Top 5 Most Affordable Areas", className="table-header"),
-            dbc.Table(id="affordable-table", bordered=True, hover=True, striped=True, responsive=True)
-        ], width=6),
+            dbc.Table(id="affordable-table", bordered=True, hover=True, striped=True, responsive=True, className="custom-table")
+        ], xs=12, md=6),
 
         dbc.Col([
             html.H4("Top 5 Least Affordable Areas", className="table-header"),
-            dbc.Table(id="expensive-table", bordered=True, hover=True, striped=True, responsive=True)
-        ], width=6)
-    ], className="mt-4")
+            dbc.Table(id="expensive-table", bordered=True, hover=True, striped=True, responsive=True, className="custom-table")
+        ], xs=12, md=6)
+    ], className="custom-row")
 ], fluid=True)
 
 #Callbacks to show changes made due to user inputs
@@ -166,14 +168,14 @@ def update_dashboard(user_salary, reset_clicks):
         top_affordable[col] = top_affordable[col].map(lambda x: f"£{x:,.0f}" if pd.notnull(x) else "N/A")
         top_expensive[col] = top_expensive[col].map(lambda x: f"£{x:,.0f}" if pd.notnull(x) else "N/A")
 
-    top_affordable["Housing Affordability Index"] = pd.to_numeric(top_affordable["Housing Affordability Index"], errors="coerce").map(lambda x: f"{x:.1f}" if pd.notnull(x) else "N/A")
-    top_expensive["Housing Affordability Index"] = pd.to_numeric(top_expensive["Housing Affordability Index"], errors="coerce").map(lambda x: f"{x:.1f}" if pd.notnull(x) else "N/A")
+    top_affordable["Housing Affordability Index"] = pd.to_numeric(top_affordable["Housing Affordability Index"], errors="coerce").map(lambda x: f"{x:.2f}" if pd.notnull(x) else "N/A")
+    top_expensive["Housing Affordability Index"] = pd.to_numeric(top_expensive["Housing Affordability Index"], errors="coerce").map(lambda x: f"{x:.2f}" if pd.notnull(x) else "N/A")
 
     title = "England & Wales Housing Affordability Map"
     if not triggered_by_reset and user_salary and user_salary > 0:
         title = f"Affordability Based on £{int(user_salary):,} Salary"
 
-    # Return updated map, tables, and optional warning
+    # Return updated map, tables, and warning
     return (
         generate_affordability_map(df, title),
         df_to_html_table(top_affordable),

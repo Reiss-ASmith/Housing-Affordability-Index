@@ -5,6 +5,7 @@ body {
     font-family: 'Segoe UI', sans-serif;
 }
 
+/* Dashboard Title */
 .dashboard-title {
     font-size: 2.5rem;
     font-weight: 600;
@@ -13,6 +14,7 @@ body {
     margin: 2rem 0 1.5rem 0;
 }
 
+/* Input & Button Section */
 .input-label {
     font-weight: 500;
     color: #cccccc;
@@ -27,10 +29,15 @@ body {
     border-radius: 4px;
     padding: 0.5rem;
     width: 100%;
+    margin-top: 0.2rem;
 }
 
 .custom-input::placeholder {
     color: #888888;
+}
+
+.custom-button {
+    margin-top: 0.3rem;
 }
 
 .custom-alert {
@@ -38,14 +45,12 @@ body {
     margin-top: 1rem;
 }
 
-.custom-button {
-    margin-top: 2rem;
-}
-
+/* Row Spacing */
 .custom-row {
     margin-bottom: 2rem;
 }
 
+/* Graph Panel */
 .custom-graph {
     background-color: #1e1e1e;
     padding: 10px;
@@ -53,6 +58,7 @@ body {
     border-radius: 8px;
 }
 
+/* Tables */
 .table-heading {
     font-size: 1.25rem;
     color: #ffffff;
@@ -70,4 +76,11 @@ body {
 
 .custom-table tbody tr:hover {
     background-color: #333333;
+}
+
+/* Responsive spacing for stacked tables on small screens */
+@media (max-width: 768px) {
+    .custom-row > .col {
+        margin-bottom: 1.5rem;
+    }
 }
