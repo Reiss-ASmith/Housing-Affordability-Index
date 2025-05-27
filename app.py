@@ -99,7 +99,7 @@ app.layout = dbc.Container([
                     id="salary-input",
                     type="number",
                     placeholder="Enter your annual salary",
-                    step=1000,
+                    step=1,
                     className="custom-input me-2"
                 ),
                 dbc.Button(
@@ -151,18 +151,24 @@ def update_dashboard(user_salary, reset_clicks):
 
     ctx = dash.callback_context
     triggered_by_reset = ctx.triggered and ctx.triggered[0]["prop_id"] == "reset-button.n_clicks"
+
     if triggered_by_reset:
         df["Housing Affordability Index"] = df["Original Affordability Index"]
         warning_message = ""
         show_warning = False
     #displays an error message prompting the user to enter a valid number if they input something invalid for the salary
-    elif not user_salary or user_salary <= 0:
+    elif user_salary is not None and user_salary > 0:
+        df["Housing Affordability Index"] = df["Median House Price"] / user_salary
+        warning_message = ""
+        show_warning = False
+
+    elif user_salary is not None and user_salary <= 0:
         warning_message = "\u26a0 Please enter a valid salary greater than £0."
         df["Housing Affordability Index"] = df["Original Affordability Index"]
         show_warning = True
     #creates new index based on the user's inputted salary
     else:
-        df["Housing Affordability Index"] = df["Median House Price"] / user_salary
+        df["Housing Affordability Index"] = df["Original Affordability Index"]
         warning_message = ""
         show_warning = False
     
